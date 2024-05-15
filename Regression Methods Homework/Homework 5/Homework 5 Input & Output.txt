@@ -1,0 +1,76 @@
+> library(faraway)
+> B17<- read.csv(file="C:/Users/Dimab/OneDrive/Desktop/Regression Methods Homework/Homework 5/B17.csv",header = TRUE)
+> #a) generate a basic scatter plot matrix
+> pdf(file="C:/Users/Dimab/OneDrive/Desktop/Regression Methods Homework/Homework 5/HW5_graphs.pdf")
+> plot(B17)
+> 
+> #b) generate correlation matrix
+> cor_matrix <- cor(B17)
+> cor_matrix
+                Satisfaction        Age   Severity SurgicalMedical    Anxiety
+Satisfaction       1.0000000 -0.8707049 -0.6531434      -0.1822682 -0.5127287
+Age               -0.8707049  1.0000000  0.5290246       0.2456932  0.6212453
+Severity          -0.6531434  0.5290246  1.0000000       0.1775101  0.4471567
+SurgicalMedical   -0.1822682  0.2456932  0.1775101       1.0000000  0.1096486
+Anxiety           -0.5127287  0.6212453  0.4471567       0.1096486  1.0000000
+> 
+> #c) obtain least squares prediction equation
+> lmod1 <- lm(Satisfaction ~ Age + Severity + SurgicalMedical + Anxiety, data = B17)
+> summary(lmod1)
+
+Call:
+lm(formula = Satisfaction ~ Age + Severity + SurgicalMedical + 
+    Anxiety, data = B17)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-18.506  -5.096   1.306   4.738  28.722 
+
+Coefficients:
+                Estimate Std. Error t value Pr(>|t|)    
+(Intercept)     140.1689     8.3191  16.849 2.77e-13 ***
+Age              -1.1428     0.1904  -6.002 7.22e-06 ***
+Severity         -0.4699     0.1866  -2.518   0.0204 *  
+SurgicalMedical   2.2259     4.1402   0.538   0.5968    
+Anxiety           1.2673     1.4922   0.849   0.4058    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 9.921 on 20 degrees of freedom
+Multiple R-squared:  0.8183,	Adjusted R-squared:  0.7819 
+F-statistic: 22.51 on 4 and 20 DF,  p-value: 3.611e-07
+
+> # Satisfaction = 140.1689 + -1.1428(Age) + -0.4699(Severity) + 2.2259(SurgicalMedical) + 1.2673(Anxiety) 
+> 
+> #d) compute VIFs
+> vif(lmod1)
+            Age        Severity SurgicalMedical         Anxiety 
+       1.939128        1.441055        1.072782        1.689768 
+> #VIF for Age = 1.939128
+> #VIF for Severity = 1.441055
+> #VIF for SurgicalMedical = 1.072782 
+> #VIF for Anxiety = 1.689768 
+> 
+> #e) interpret the Beta estimate of Anxiety in the model
+> #Every one unit increase in Anxiety while all other regressors are held constant results in a
+> #1.2673 increase in satisfaction (y).
+> 
+> #f) perform a partial F-test for Anxiety
+> lmod2 <- lm(Satisfaction ~ Anxiety, data = B17)
+> anova(lmod1,lmod2)
+Analysis of Variance Table
+
+Model 1: Satisfaction ~ Age + Severity + SurgicalMedical + Anxiety
+Model 2: Satisfaction ~ Anxiety
+  Res.Df    RSS Df Sum of Sq      F    Pr(>F)    
+1     20 1968.5                                  
+2     23 7983.7 -3   -6015.1 20.371 2.707e-06 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+> #the p-value is 2.707e-06, which is less than 0.05, so we can reject the null hypothesis and conclude
+> #that anxiety is significant.
+> 
+> # Close the PDF device
+> dev.off()
+null device 
+          1 

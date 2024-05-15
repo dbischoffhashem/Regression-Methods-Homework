@@ -1,0 +1,108 @@
+reaction.data <- read.csv(file="C:/Users/Dimab/OneDrive/Desktop/Regression Methods Homework/Homework 4 (3_8)/B5.csv",header = TRUE)
+> lmod <- lm(y ~ x6 + x7, data = reaction.data)
+> 
+> #(a) Fit a multiple regression model relating CO2 product (y) to total solvent (x6) and hydrogen consumption (x7). 
+> summary(lmod)
+
+Call:
+lm(formula = y ~ x6 + x7, data = reaction.data)
+
+Residuals:
+     Min       1Q   Median       3Q      Max 
+-23.2035  -4.3713   0.2513   4.9339  21.9682 
+
+Coefficients:
+            Estimate Std. Error t value Pr(>|t|)    
+(Intercept) 2.526460   3.610055   0.700   0.4908    
+x6          0.018522   0.002747   6.742 5.66e-07 ***
+x7          2.185753   0.972696   2.247   0.0341 *  
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 9.924 on 24 degrees of freedom
+Multiple R-squared:  0.6996,	Adjusted R-squared:  0.6746 
+F-statistic: 27.95 on 2 and 24 DF,  p-value: 5.391e-07
+
+> #y =  2.526460 + 0.018522x6 + 2.185753x7
+> 
+> #(b) Test for significance of regression. Calculate R2 and RAdj 2. 
+> #The F-statistic is 27.95 with a p-value of 5.391e-07, indicating the model is significant
+> #R^2 = 0.6996 R^2 adjusted = 0.6746
+> 
+> #(c) Using t tests determine the contribution of x6 and x7 to the model. 
+> #x6 and x7 are both significant because they both have p-values of less than 0.05 (5.66e-07 
+> #for x6 and 0.0341 for x7)
+> 
+> #(d) Construct 95% CIs on β6 and β7. 
+> confint(lmod)
+                  2.5 %     97.5 %
+(Intercept) -4.92432697 9.97724714
+x6           0.01285196 0.02419204
+x7           0.17820756 4.19329833
+> # CI on β6 = (0.01285196, 0.02419204), CI on β7 = (0.17820756, 4.19329833)
+> 
+> #(e) Refit the model using only x6 as the regressor. Test for significance of regression and calculate 
+> #R2 and RAdj 2 . Discuss your findings. Based on these statistics, are you satisfied with this model? 
+> lmod2 <- lm(y ~ x6, data = reaction.data)
+> summary(lmod2)
+
+Call:
+lm(formula = y ~ x6, data = reaction.data)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-28.081  -5.829  -0.839   5.522  26.882 
+
+Coefficients:
+            Estimate Std. Error t value Pr(>|t|)    
+(Intercept) 6.144181   3.483064   1.764   0.0899 .  
+x6          0.019395   0.002932   6.616 6.24e-07 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 10.7 on 25 degrees of freedom
+Multiple R-squared:  0.6365,	Adjusted R-squared:  0.6219 
+F-statistic: 43.77 on 1 and 25 DF,  p-value: 6.238e-07
+
+> # y = 6.144181 + 0.019395x6  
+> #The model with only x6 is still significant with a p-value of 6.24e-07.
+> #R^2 = 0.6365, adjusted R^2 = 0.6219. 
+> # X6 is still significant, and the R^2 and adjusted R^2 are only slightly smaller than in the 
+> #model with x6 and x7, suggesting that the model with only x6 may be sufficient. Therefore, I
+> #am satisfied with this model.
+> 
+> #(f) Construct a 95% CI on β6 using the model you fit in part e. Compare the length of this CI to the length
+> #of the CI in part d. Does this tell you anything important about the contribution of x7 to the model?
+> confint(lmod2)
+                  2.5 %      97.5 %
+(Intercept) -1.02932458 13.31768586
+x6           0.01335688  0.02543261
+> # CI = (0.01335688, 0.02543261)
+> #The length of this CI is very close to the length of the CI with x7, indicating that the inclusion of x7 did
+> #not have a substantial impact on the precision of the estimate for β6, and x7 may not contribute significantly
+> # to the model. 
+> 
+> #(g) Compare the values of MSRes obtained for the two models you have fit (parts a and e). How did the MSRes change
+> #when you removed x7 from the model? Does this tell you anything important about the contribution of x7 to the model?
+> anova(lmod)
+Analysis of Variance Table
+
+Response: y
+          Df Sum Sq Mean Sq F value    Pr(>F)    
+x6         1 5008.9  5008.9 50.8557 2.267e-07 ***
+x7         1  497.3   497.3  5.0495    0.0341 *  
+Residuals 24 2363.8    98.5                      
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+> anova(lmod2)
+Analysis of Variance Table
+
+Response: y
+          Df Sum Sq Mean Sq F value    Pr(>F)    
+x6         1 5008.9  5008.9  43.766 6.238e-07 ***
+Residuals 25 2861.2   114.4                      
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+> #The MSE for the model with both regressors is 98.5 while the MSE when I removed x7 is 114.4, which is larger. 
+> #This information indicates that the model with x7 included better fit the data. Therefore, x7 does contribute
+> #to the model, but the model may still be ok without x7 in it. 

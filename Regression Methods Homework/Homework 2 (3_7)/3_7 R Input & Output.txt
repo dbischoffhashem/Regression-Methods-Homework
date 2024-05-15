@@ -1,0 +1,105 @@
+> library(faraway)
+> house.data <- read.csv(file="C:/Users/Dimab/OneDrive/Desktop/Regression Methods Homework/Homework 2 (3_7)/B4.csv",header = TRUE)
+> 
+> #(a) Fit a multiple regression model relating selling price to all nine regressors. 
+> pdf(file="C:/Users/Dimab/OneDrive/Desktop/Regression Methods Homework/Homework 2 (3_7)/3_7_graphs.pdf")
+> plot(house.data)
+> #y = 14.92765 + 1.92472x1 + 7.00053x2 + 0.14918x3 + 2.72281x4 + 2.00668x5 + -0.41012x6 + -1.40324x7 + -0.03715x8 + 1.55945x9
+> 
+> 
+> #(b) Test for significance of regression. What conclusions can you draw? 
+> lmod <- lm(y ~ x1 + x2 + x3 + x4 + x5 + x6 + x7 + x8 + x9, data = house.data)
+> summary(lmod)
+
+Call:
+lm(formula = y ~ x1 + x2 + x3 + x4 + x5 + x6 + x7 + x8 + x9, 
+    data = house.data)
+
+Residuals:
+   Min     1Q Median     3Q    Max 
+-3.720 -1.956 -0.045  1.627  4.253 
+
+Coefficients:
+            Estimate Std. Error t value Pr(>|t|)  
+(Intercept) 14.92765    5.91285   2.525   0.0243 *
+x1           1.92472    1.02990   1.869   0.0827 .
+x2           7.00053    4.30037   1.628   0.1258  
+x3           0.14918    0.49039   0.304   0.7654  
+x4           2.72281    4.35955   0.625   0.5423  
+x5           2.00668    1.37351   1.461   0.1661  
+x6          -0.41012    2.37854  -0.172   0.8656  
+x7          -1.40324    3.39554  -0.413   0.6857  
+x8          -0.03715    0.06672  -0.557   0.5865  
+x9           1.55945    1.93750   0.805   0.4343  
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 2.949 on 14 degrees of freedom
+Multiple R-squared:  0.8531,	Adjusted R-squared:  0.7587 
+F-statistic: 9.037 on 9 and 14 DF,  p-value: 0.000185
+
+> #Since the p-value is 0.000185, which is less than 0.05, we can conclude that at least one of 
+> #the regressors is significant (has a nonzero β value).
+> 
+> #(c) Use t tests to assess the contribution of each regressor to the model. Discuss your findings. 
+> #Looking at the t-tests above, none of the t-tests for the individual regressors have a p-value 
+> #less than 0.05. This is likely due to issues of multicollinearity, since part (b) indicates at least
+> #one of the regressors is significant.
+> 
+> #(d) What is the contribution of lot size and living space to the model given that all of the other regressors are included? 
+> 
+> # remove x3 and x4
+> lmod_reduced <- lm(y ~ x1 + x2 + x5 + x6 + x7 + x8 + x9, data = house.data)
+> summary(lmod_reduced)
+
+Call:
+lm(formula = y ~ x1 + x2 + x5 + x6 + x7 + x8 + x9, data = house.data)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-3.4869 -1.9005 -0.2178  1.9221  4.1852 
+
+Coefficients:
+            Estimate Std. Error t value Pr(>|t|)  
+(Intercept) 15.27482    5.54301   2.756   0.0141 *
+x1           2.26902    0.86603   2.620   0.0186 *
+x2           7.85962    3.70415   2.122   0.0498 *
+x5           1.80882    1.28655   1.406   0.1789  
+x6          -0.42813    2.26694  -0.189   0.8526  
+x7          -0.89946    3.19175  -0.282   0.7817  
+x8          -0.04113    0.06321  -0.651   0.5245  
+x9           1.73134    1.73572   0.997   0.3334  
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 2.821 on 16 degrees of freedom
+Multiple R-squared:  0.8464,	Adjusted R-squared:  0.7792 
+F-statistic: 12.59 on 7 and 16 DF,  p-value: 1.909e-05
+
+> 
+> f_test <- anova(lmod, lmod_reduced)
+> print(f_test)
+Analysis of Variance Table
+
+Model 1: y ~ x1 + x2 + x3 + x4 + x5 + x6 + x7 + x8 + x9
+Model 2: y ~ x1 + x2 + x5 + x6 + x7 + x8 + x9
+  Res.Df    RSS Df Sum of Sq      F Pr(>F)
+1     14 121.75                           
+2     16 127.36 -2   -5.6083 0.3225 0.7296
+> 
+> #The F-statistic is 0.3225 with a p-value of 0.7296, which is not significant at the 0.05 
+> #level. This test indicates there is not a significant difference between the regression
+> # model with x3 and x4 and the regression model without them, so in the context of the 
+> # entire model, x3 and x4 are not significant. 
+> 
+> 
+> #(e) Is multicollinearity a potential problem in this model?
+> vif(lmod)
+       x1        x2        x3        x4        x5        x6        x7        x8        x9 
+ 7.021036  2.835413  2.454907  3.836477  1.823605 11.710101  9.722663  2.320887  1.942494 
+> #Yes, multicollinearity is a potential problem in this model because all the VIF values 
+> #are greater than one and regressors x1, x6, and x7 have particularly high VIF values,
+> #indicating multicollinearity in the model.
+> 
+> # Close the PDF device
+> dev.off()

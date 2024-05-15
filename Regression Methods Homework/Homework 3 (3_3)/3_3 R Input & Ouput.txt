@@ -1,0 +1,70 @@
+> football.data <- read.csv(file="C:/Users/Dimab/OneDrive/Desktop/Regression Methods Homework/Homework 3 (3_3)/B1.csv",header = TRUE)
+> football.data
+    y   x1   x2   x3   x4  x5   x6   x7   x8   x9
+1  10 2113 1985 38.9 64.7   4  868 59.7 2205 1917
+2  11 2003 2855 38.8 61.3   3  615 55.0 2096 1575
+3  11 2957 1737 40.1 60.0  14  914 65.6 1847 2175
+4  13 2285 2905 41.6 45.3  -4  957 61.4 1903 2476
+5  10 2971 1666 39.2 53.8  15  836 66.1 1457 1866
+6  11 2309 2927 39.7 74.1   8  786 61.0 1848 2339
+7  10 2528 2341 38.1 65.4  12  754 66.1 1564 2092
+8  11 2147 2737 37.0 78.3  -1  761 58.0 1821 1909
+9   4 1689 1414 42.1 47.6  -3  714 57.0 2577 2001
+10  2 2566 1838 42.3 54.2  -1  797 58.9 2476 2254
+11  7 2363 1480 37.3 48.0  19  984 67.5 1984 2217
+12 10 2109 2191 39.5 51.9   6  700 57.2 1917 1758
+13  9 2295 2229 37.4 53.6  -5 1037 58.8 1761 2032
+14  9 1932 2204 35.1 71.4   3  986 58.6 1709 2025
+15  6 2213 2140 38.8 58.3   6  819 59.2 1901 1686
+16  5 1722 1730 36.6 52.6 -19  791 54.4 2288 1835
+17  5 1498 2072 35.3 59.3  -5  776 49.6 2072 1914
+18  5 1873 2929 41.1 55.3  10  789 54.3 2861 2496
+19  6 2118 2268 38.2 69.6   6  582 58.7 2411 2670
+20  4 1775 1983 39.3 78.3   7  901 51.7 2289 2202
+21  3 1904 1792 39.7 38.1  -9  734 61.9 2203 1988
+22  3 1929 1606 39.7 68.8 -21  627 52.7 2592 2324
+23  4 2080 1492 35.5 68.8  -8  722 57.8 2053 2550
+24 10 2301 2835 35.3 74.1   2  683 59.7 1979 2110
+25  6 2040 2416 38.7 50.0   0  576 54.9 2048 2628
+26  8 2447 1638 39.9 57.1  -8  848 65.3 1786 1776
+27  2 1416 2649 37.4 56.3 -22  684 43.8 2876 2524
+28  0 1503 1503 39.3 47.0  -9  875 53.5 2560 2241
+> 
+> #(a) a. Find a 95% CI on β7. 
+> lmod <- lm(y ~ x2 + x7 + x8, data = football.data)
+> confint(lmod)
+                    2.5 %       97.5 %
+(Intercept) -18.114944410 14.498200293
+x2            0.002163664  0.005032477
+x7            0.011855322  0.376065098
+x8           -0.007451027 -0.002179961
+> # The 95% confidence interval for β7 is (0.011855322, 0.376065098)
+> 
+> #(b) Find a 95% CI on the mean number of games won by a team when x2 = 2300, x7 = 56.0, and x8 = 2100.
+> predict(lmod, data.frame(x2=2300,x7=56,x8=2100), interval = "confidence", level = 0.95)
+       fit      lwr      upr
+1 7.216424 6.436203 7.996645
+> #The 95% confidence interval  on the mean number of games won by a team when x2 = 2300, 
+> #x7 = 56.0, and x8 = 2100 is (6.436203, 7.996645)
+> 
+> #(c) Compute a prediction interval on the number of games won using the same X settings 
+> #that are given in part b.
+> predict(lmod, data.frame(x2=2300,x7=56,x8=2100), interval = "prediction", level = 0.95)
+       fit      lwr      upr
+1 7.216424 3.609523 10.82332
+> #The 95% prediction interval is (3.609523, 10.82332)
+> 
+> #(d) For each part a-c, write an one sentence interpretation of the Confidence Interval
+> #/Prediction Interval.
+> 
+> #a.We are 95 percent confident that the true value of β7 falls between 0.0119 and 0.376. 
+> #This interval does not include 0, which suggests the associated regressor is 
+> #is significant at the 95 percent confidence level (although the lower bound is close
+> #to 0, which may suggest Beta is relatively small or close to 0). 
+> 
+> #b.We are 95 percent confident that the mean number of games won falls between 6.436 and 
+> #7.997 when the passing yards equal 2300, the percent rushing yards equal 56, and the
+> #Opponents’ rushing yards equal 2100.
+> 
+> #c.We are 95% confident that a new observation of the number of games a team won, using the
+> #same X settings as in part b, will fall between 3.610 and 10.823.

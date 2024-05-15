@@ -1,0 +1,107 @@
+> library(faraway)
+> prob2_18 <- read.csv(file="C:/Users/Dimab/OneDrive/Desktop/Regression Methods Homework/prob2_18.csv",header = TRUE)
+> print(prob2_18)
+              firm amount ret_impress
+1      Miller Lite   50.1        32.1
+2            Pepsi   74.1        99.6
+3          Strohs    19.3        11.7
+4  Federal Express   22.9        21.9
+5      Burger King   82.4        60.8
+6        Coca-Cola   40.1        78.6
+7        McDonalds  185.9        92.4
+8              MCI   26.9        50.7
+9        Diet Cola   20.4        21.4
+10            Ford  166.2        40.1
+11           Levis   27.0        40.8
+12        Bud Lite   45.6        10.4
+13        ATT Bell  154.9        88.9
+14    Calvin Klein    5.0        12.0
+15         Wendys    49.7        29.2
+16        Polaroid   26.9        38.0
+17          Shasta    5.7        10.0
+18        Meow Mix    7.6        12.3
+19     Oscar Meyer    9.2        23.4
+20           Crest   32.4        71.1
+21  Kibbles N Bits    6.1         4.4
+> lmod <- lm(ret_impress ~ amount, prob2_18)
+> 
+> #(a) Fit the simple linear regression model to these data. 
+> pdf(file="C:/Users/Dimab/OneDrive/Desktop/Regression Methods Homework/prob2_18_out.pdf")
+> plot(ret_impress~amount,prob2_18)
+> abline(lmod)
+> 
+> summary(lmod)
+
+Call:
+lm(formula = ret_impress ~ amount, data = prob2_18)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-42.422 -12.623  -8.171   8.832  50.526 
+
+Coefficients:
+            Estimate Std. Error t value Pr(>|t|)   
+(Intercept) 22.16269    7.08948   3.126  0.00556 **
+amount       0.36317    0.09712   3.739  0.00139 **
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Residual standard error: 23.5 on 19 degrees of freedom
+Multiple R-squared:  0.424,	Adjusted R-squared:  0.3936 
+F-statistic: 13.98 on 1 and 19 DF,  p-value: 0.001389
+
+> # equation: y = 22.16269 + 0.36317x + e
+> 
+> #(b) Is there a significant relationship between the amount a company spends on advertising and retained impressions? Justify your answer statistically. 
+> anova(lmod)
+Analysis of Variance Table
+
+Response: ret_impress
+          Df  Sum Sq Mean Sq F value   Pr(>F)   
+amount     1  7723.3  7723.3  13.983 0.001389 **
+Residuals 19 10494.1   552.3                    
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+> #The p-value in the anova table is 0.001389, which is less than 0.05. Therefore, 
+> #there is strong evidence to reject the null hypothesis and conclude that there 
+> #is a significant relationship between the amount spent on advertisements and 
+> #the retained impressions.
+> 
+> #(c) Construct the 95% confidence and prediction bands for these data.
+> lmod <- lm(ret_impress ~ amount, data = prob2_18)
+> 
+> #get predicted y values using regression equation
+> newx <- seq(min(prob2_18$amount), max(prob2_18$amount), length.out=100)
+> preds <- predict(lmod, newdata = data.frame(amount=newx), interval = 'confidence')
+> preds2 <- predict(lmod, newdata = data.frame(amount=newx), interval = 'prediction')
+> 
+> #create plot of x vs. y
+> plot(ret_impress ~ amount, data = prob2_18)
+> 
+> #add fitted regression line
+> abline(lmod)
+> 
+> #add confidence and prediction bands
+> lines(newx, preds[ ,3], lty = 'dashed', col = 'blue')
+> lines(newx, preds[ ,2], lty = 'dashed', col = 'blue')
+> 
+> lines(newx, preds2[ ,3], lty = 'dashed', col = 'red')
+> lines(newx, preds2[ ,2], lty = 'dashed', col = 'red')
+> 
+> #(d) Give the 95% confidence and prediction intervals for the number of retained 
+> #impressions for MCI
+> new.dat = data.frame(amount = 26.9)
+> 
+> predict(lmod, newdata = new.dat, interval = 'confidence')
+       fit      lwr      upr
+1 31.93208 20.18314 43.68102
+> predict(lmod, newdata = new.dat, interval = 'prediction')
+       fit       lwr      upr
+1 31.93208 -18.64084 82.50499
+> 
+> #confidence interval: (20.18314, 43.68102)
+> #prediction interval: (-18.64084, 82.50499)
+> 
+> # Close the PDF device
+> dev.off()
+pdf 

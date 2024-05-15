@@ -1,0 +1,68 @@
+> library(faraway)
+> library(lmtest)
+> library(epiDisplay)
+> data <- read.csv(file="C:/Users/Dimab/OneDrive/Desktop/Regression Methods Homework/Homework 8/p13_7modified.csv", header = TRUE)
+> #(a) Fit a logistic regression model to the data.
+> logistic = glm(y ~ x1 + x2 + x3 + x4, family=binomial(logit), data= data)
+> summary(logistic)
+
+Call:
+glm(formula = y ~ x1 + x2 + x3 + x4, family = binomial(logit), 
+    data = data)
+
+Coefficients:
+              Estimate Std. Error z value Pr(>|z|)  
+(Intercept) -26.126980  11.434606  -2.285   0.0223 *
+x1           -0.002629   0.007704  -0.341   0.7329  
+x2            0.447578   0.190867   2.345   0.0190 *
+x3           -0.036801   0.030883  -1.192   0.2334  
+x4           -0.108837   0.124053  -0.877   0.3803  
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+(Dispersion parameter for binomial family taken to be 1)
+
+    Null deviance: 47.164  on 43  degrees of freedom
+Residual deviance: 14.036  on 39  degrees of freedom
+AIC: 24.036
+
+Number of Fisher Scoring iterations: 8
+
+> # y = -26.126980x - 0.002629x1 + 0.447578x2 - 0.036801x3 - 0.108837x4
+> 
+> #(b) Test H0: all Beta-parameters are 0 versus at least one Beta-parameter is not 0.
+> null_model = glm(y ~ 1,family=binomial(logit), data=data)
+> lrtest(null_model,logistic) 
+Likelihood ratio test for MLE method 
+Chi-squared 4 d.f. =  33.12883 , P value =  1.124085e-06 
+
+> #Reject the null hypothesis because p < 0.05. This indicates at least one beta parameter is not 0.
+> 
+> #(c) Plot the observed binary responses versus the fitted values.
+> pdf(file="C:/Users/Dimab/OneDrive/Desktop/Regression Methods Homework/Homework 8/HW8_graph.pdf")
+> plot(logistic$fitted.values,data$y)
+> 
+> #(d) Use the logistic.display function found in the epiDisplay library to show statistics for 
+> # each individual parameter from the logistic regression performed in part a.
+> logistic.display(logistic)
+
+Logistic regression predicting y 
+ 
+                crude OR(95%CI)         adj. OR(95%CI)          P(Wald's test) P(LR-test)
+x1 (cont. var.) 0.9994 (0.9953,1.0034)  0.9974 (0.9824,1.0125)  0.733          0.729     
+                                                                                         
+x2 (cont. var.) 1.53 (1.06,2.23)        1.56 (1.08,2.27)        0.019          < 0.001   
+                                                                                         
+x3 (cont. var.) 0.99 (0.96,1.02)        0.96 (0.91,1.02)        0.233          0.256     
+                                                                                         
+x4 (cont. var.) 0.98 (0.9,1.07)         0.9 (0.7,1.14)          0.38           0.315     
+                                                                                         
+Log-likelihood = -7.0178
+No. of observations = 44
+AIC value = 24.0356
+
+> 
+> # Close the PDF device
+> dev.off()
+null device 
+          1 
